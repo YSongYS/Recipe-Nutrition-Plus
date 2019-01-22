@@ -19,17 +19,15 @@ class User < ActiveRecord::Base
   end
 
   def calculate_store_protein_target
-    self.protein = (self.bmr * 0.15) / 4
+    self.protein_target = (self.bmr * 0.15) / 4
   end
 
   def calculate_store_fat_target
-    self.fat = (self.bmr * 0.35) / 9
+    self.fat_target = (self.bmr * 0.35) / 9
   end
 
 # calculate weekly calories though meals
 # taking nutrition info from ingredients
-
-
 
 
 
