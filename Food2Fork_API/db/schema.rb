@@ -10,7 +10,15 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_01_22_104703) do
+ActiveRecord::Schema.define(version: 2019_01_22_150853) do
+
+  create_table "cookings", force: :cascade do |t|
+    t.integer "meal_id"
+    t.integer "ingredient_id"
+    t.float "usage"
+    t.string "unit"
+    t.string "unit_v_or_w"
+  end
 
   create_table "ingredients", force: :cascade do |t|
     t.string "ingredient_long_name"
@@ -21,6 +29,14 @@ ActiveRecord::Schema.define(version: 2019_01_22_104703) do
     t.float "fat_g"
     t.float "carbo_g"
     t.float "protein_g"
+  end
+
+  create_table "meals", force: :cascade do |t|
+    t.integer "user_id"
+    t.string "day_of_the_week"
+    t.string "meal_type"
+    t.string "meal_name"
+    t.integer "recipe_id"
   end
 
 end

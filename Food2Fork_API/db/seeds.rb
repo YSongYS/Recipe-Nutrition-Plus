@@ -3,10 +3,10 @@ require_relative '../config/environment'
 # in case of re-seed, destroy previous record, need to be mindful of cumulating ids
 Ingredient.destroy_all
 
-
 def convert_volume_to_smallest_denominator (original_unit_volume)
   # take anything after space as unit
   common_unit_volume = original_unit_volume.split(' ',2)[1].downcase
+  common_unit_volume = unit_converter (common_unit_volume)
 
   # take anything before space as number. split by "/" in case of fraction
   numerator, denominator = original_unit_volume.split(' ',2)[0].split('/').map(&:to_f)
