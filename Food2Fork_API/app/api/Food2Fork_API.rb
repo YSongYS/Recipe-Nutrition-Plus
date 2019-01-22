@@ -1,7 +1,4 @@
-require 'net/http'
-require 'open-uri'
-require 'json'
-require 'pry'
+require_relative '../../config/environment'
 
 def get_user_crave
   puts "What do you feel like having today?"
@@ -23,6 +20,7 @@ def top_recipe_URL(user_input, api_key)
 end
 
 # given user_input on key gredient or receipe name, return the top recipe search researchs in an array of hashes
+# CHANGE CHANGE CHANGE add filter to elimnate bad recipes, such as fries 3
 def get_top_recipes (user_input)
   api_key = "a8f8783a496ebb531aba642dbae88a7b"
   recipes_URL = top_recipe_URL(user_input, api_key)
@@ -56,11 +54,3 @@ def get_selected_recipes(selected_num, recipes)
   ingredients = eval(response)[:recipe][:ingredients]
   return ingredients
 end
-
-#user_input = get_user_crave
-#recipes = get_top_recipes(user_input)
-#print_top_x(recipes, 5)
-#selected_num = get_user_select
-#ingredients = get_selected_recipes(selected_num, recipes)
-#puts ingredients
-#puts "the end"
