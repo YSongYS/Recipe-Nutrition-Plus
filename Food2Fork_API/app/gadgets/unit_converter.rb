@@ -58,12 +58,42 @@ end
 
 def volume_converter(volume, unit)
   volume_converter = {
-    "cup" => 1, "tbsp" => 1, "pint" => 1, "quart" => 1, "tsp" => 1, "fl oz" => 1, "cu in" => 1, "gal" => 1, "ml" => 1
+    "cup" => 1.0,
+    "tbsp" => 1.0/16,
+    "pint" => 2.0,
+    "quart" => 4.0,
+    "tsp" => 1.0/48,
+    "fl oz" => 1.0/1.8327,
+    "cu in" => 1/14.438,
+    "gal" => 16.0,
+    "ml" => 1/236.6
   }
-  return volume_hash
+
+  if !volume_converter[unit]
+    volume_in_cup = nil
+  else
+    volume_in_cup = volume * volume_converter[unit]
+  end
+#  volume_hash = {}
+#  volume_converter.each do |unit, conversion|
+#    volume_hash[unit] = volume_in_cup * conversion
+#  end
+  return volume_in_cup
 end
+
 
 def weight_converter(weight, unit)
 
-  return weight_hash
+  weight_converter = {
+    "g" => 1.0,
+    "oz" => 28.35,
+    "lb" => 453.6,
+    "kg" => 1000.0
+  }
+  weight_in_g = weight * weight_converter[unit]
+#  weight_hash = {}
+#  weight_converter.each do |unit, conversion|
+#    weight_hash[unit] = volume_in_cup * conversion
+#  end
+  return weight_in_g
 end

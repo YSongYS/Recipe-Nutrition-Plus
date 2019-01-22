@@ -16,7 +16,6 @@ class Ingredient < ActiveRecord::Base
         unit = unit_converter(parsed_line[1])
         unit_v_or_w = v_or_w_identifier(unit)
       end
-
       Ingredient.create(meal_id:meal_id, ingredient_id:ingredient_id, usage:usage, unit:unit, unit_v_or_w:unit_v_or_w)
     end
   end
