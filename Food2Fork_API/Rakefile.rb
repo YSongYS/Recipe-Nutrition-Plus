@@ -9,8 +9,9 @@ end
 
 
 # get user info and save to user table
-namespace :get_user_info
-  desc "ask user for name, update user table"
-  task :get_name do
-  
-    end
+namespace :get_user_info do
+  desc "ask user for info, update user table"
+  task :get_info do
+    User.register_new_user
+  end
+end

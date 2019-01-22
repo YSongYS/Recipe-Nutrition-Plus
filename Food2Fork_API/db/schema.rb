@@ -23,7 +23,7 @@ ActiveRecord::Schema.define(version: 2019_01_22_145450) do
     t.float "protein_g"
   end
 
-  create_table "user", force: :cascade do |t|
+  create_table "users", force: :cascade do |t|
     t.string "name"
     t.string "gender"
     t.float "age"
