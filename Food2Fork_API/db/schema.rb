@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_01_22_104703) do
+ActiveRecord::Schema.define(version: 2019_01_22_145450) do
 
   create_table "ingredients", force: :cascade do |t|
     t.string "ingredient_long_name"
@@ -21,6 +21,18 @@ ActiveRecord::Schema.define(version: 2019_01_22_104703) do
     t.float "fat_g"
     t.float "carbo_g"
     t.float "protein_g"
+  end
+
+  create_table "user", force: :cascade do |t|
+    t.string "name"
+    t.string "gender"
+    t.float "age"
+    t.float "height"
+    t.float "weight"
+    t.float "bmr"
+    t.float "carbo_target"
+    t.float "protein_target"
+    t.float "fat_target"
   end
 
 end
