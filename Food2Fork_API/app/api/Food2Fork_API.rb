@@ -1,4 +1,4 @@
-require_relative '../../config/environment'
+# require_relative '../../config/environment'
 
 def get_user_crave
   puts "What do you feel like having today?"
