@@ -1,6 +1,9 @@
 require_relative '../../config/environment'
 
 class Cooking < ActiveRecord::Base
+  has_many :ingredients
+  belongs_to :meals
+
 
   def self.cook_the_meal (ingredient_line, meal_id)
     ingredient_line.each do |ingredient_line|

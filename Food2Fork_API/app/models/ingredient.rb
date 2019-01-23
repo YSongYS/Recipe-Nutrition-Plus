@@ -1,2 +1,3 @@
 class Ingredient < ActiveRecord::Base
-end 
+  has_many :cookings 
+end

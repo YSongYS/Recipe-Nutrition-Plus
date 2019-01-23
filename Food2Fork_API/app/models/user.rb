@@ -1,4 +1,5 @@
 class User < ActiveRecord::Base
+  has_many :meals
 
   def calculate_store_bmr
   # BMR Male
@@ -12,9 +13,9 @@ class User < ActiveRecord::Base
     end
   end
 
-  # calculate macro targets
+  # calculate macro targets helpers
 
-  def calculate_store_carb_target
+  def calculate_store_carbo_target
     self.carbo_target = (self.bmr * 0.5) / 4
   end
 
@@ -26,11 +27,12 @@ class User < ActiveRecord::Base
     self.fat_target = (self.bmr * 0.35) / 9
   end
 
-# calculate weekly calories though meals
-# taking nutrition info from ingredients
-# meals.user.each do {sum}
-
-
+# calculate macro targets
+  def calculate_macros
+    calculate_store_fat_target
+    calculate_store_protein_target
+    calculate_store_carb_target
+  end
 
 ## Get user info helper methods sdout ##
   # Enter your name
@@ -73,6 +75,37 @@ class User < ActiveRecord::Base
     new_user.height = new_user.get_user_height
     new_user.weight = new_user.get_user_weight
     new_user.calculate_store_bmr
+    new_user.carbo_target =  new_user.calculate_store_carbo_target
+    new_user.protein_target = new_user.calculate_store_protein_target
+    new_user.fat_target = new_user.calculate_store_fat_target
+    new_user.save
+  end
+
+
+  # calculate weekly calories through meals
+  # taking nutrition info from ingredients
+  # meals.user.each do {sum}
+
+  def my_weekly_calorie_target
+    self.brm * 7
+  end
+
+  # calculate calories so far this week
+  # find all meals for self that have been eaten in the last week
+  # for each meal get full list of ingredients
+  # for each ingredient calculate calories
+  def calories_consumed_this_week
+    calories = 0
+    meals.all.each do |meal|
+      if meal.user_id == self.id
+        calories +=
+      end
+    end
+  end
+
+  def compare_calorie_target_to_calories_consumed
+    # compare to my_weekly_calorie_target
+    puts "You have eaten #{calories_consumed_this_week / my_weekly_calorie_target * 100}% of your weekly calorie target."
   end
 
 end
