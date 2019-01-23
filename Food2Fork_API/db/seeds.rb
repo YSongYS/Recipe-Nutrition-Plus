@@ -3,16 +3,15 @@ require_relative '../config/environment'
 # in case of re-seed, destroy previous record, need to be mindful of cumulating ids
 Ingredient.destroy_all
 
-
 def convert_volume_to_smallest_denominator (original_unit_volume)
   # take anything after space as unit
   common_unit_volume = original_unit_volume.split(' ',2)[1].downcase
+  common_unit_volume = unit_converter (common_unit_volume)
 
-  # take anything before space as number. split by "/" in case of fraction
-  numerator, denominator = original_unit_volume.split(' ',2)[0].split('/').map(&:to_f)
-  denominator ||= 1
+  # read string into float
+  divider = number_reader(original_unit_volume.split(' ',2)[0])
 
-  return common_unit_volume, numerator/denominator
+  return common_unit_volume, divider
 end
 
 
@@ -41,6 +40,9 @@ CSV.parse(csv, headers: true).each do |row|
   carbo_g = row.fields[5].to_f/divider
   protein_g = row.fields[6].to_f/divider
 
+  #
+  equivalent_volume_cup = volume_converter(1,common_unit_volume)
+
   # create new record hash
   new_record = {
     ingredient_long_name:ingredient_long_name,
@@ -50,7 +52,8 @@ CSV.parse(csv, headers: true).each do |row|
     calories_kCal:calories_kCal,
     fat_g:fat_g,
     carbo_g:carbo_g,
-    protein_g:protein_g
+    protein_g:protein_g,
+    equivalent_volume_cup:equivalent_volume_cup
   }
 
   # store new record hash to the table
