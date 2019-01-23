@@ -68,7 +68,7 @@ class User < ActiveRecord::Base
 
 # create new user, ask for info, save to table
   def self.register_new_user
-    new_user = User.new
+    new_user = User.create
     new_user.name = new_user.get_user_name
     new_user.gender = new_user.get_user_gender
     new_user.age = new_user.get_user_age

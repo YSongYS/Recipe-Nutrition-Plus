@@ -24,7 +24,8 @@ def unit_converter (unit)
     "oz" => ["ounce", "ounces", "ozs"],
     "g" => ["gram", "grams", "gs"],
     "lb" => ["lbs", "pound", "pounds"],
-    "kg" => ["kgs", "kilogram", "kilograms", "kilo", "kilos"]
+    "kg" => ["kgs", "kilogram", "kilograms", "kilo", "kilos"],
+    "dash" => ["dashes"]
   }
 
   # if already standarized, no change
@@ -44,7 +45,7 @@ end
 # identify if an intake unit is a weight unit or volume unit
 def v_or_w_identifier(unit)
   v_or_w_hash = {
-    "v" => ["tbsp", "cup", "pint", "quart", "pieces", "tsp", "fl oz", "pkt", "cu in", "envelp", "gal", "slices", "ml"],
+    "v" => ["tbsp", "cup", "pint", "quart", "pieces", "tsp", "fl oz", "pkt", "cu in", "envelp", "gal", "slices", "ml", "dash"],
     "w" => ["oz", "g", "lb", "kg"]
   }
   if v_or_w_hash["v"].include?(unit)
@@ -68,7 +69,8 @@ def volume_converter(volume, unit)
     "fl oz" => 1.0/1.8327,
     "cu in" => 1/14.438,
     "gal" => 16.0,
-    "ml" => 1/236.6
+    "ml" => 1/236.6,
+    "dash" => 1.0/30
   }
 
   if !volume_converter[unit]
