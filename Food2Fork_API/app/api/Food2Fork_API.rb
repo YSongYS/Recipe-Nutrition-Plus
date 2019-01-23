@@ -2,13 +2,13 @@
 
 def get_user_crave
   puts "What do you feel like having today?"
-  user_input = gets.chomp
+  user_input = STDIN.gets.chomp
   return user_input
 end
 
 def get_user_select
   puts "Which recipe would you like to go with?"
-  selected_num = gets.chomp.to_i
+  selected_num = STDIN.gets.chomp.to_i
   return selected_num
 end
 
@@ -22,7 +22,7 @@ end
 # given user_input on key gredient or receipe name, return the top recipe search researchs in an array of hashes
 # CHANGE CHANGE CHANGE add filter to elimnate bad recipes, such as fries 3
 def get_top_recipes (user_input)
-  api_key = "a8f8783a496ebb531aba642dbae88a7b"
+  api_key = "2a760245f21b3c583435e61ae5b5adef"
   recipes_URL = top_recipe_URL(user_input, api_key)
   uri = URI.parse(recipes_URL)
   response = Net::HTTP.get_response(uri).body
@@ -47,10 +47,12 @@ def selected_recipe_URL(selected_num, recipes, api_key)
 end
 
 def get_selected_recipes(selected_num, recipes)
-  api_key = "a8f8783a496ebb531aba642dbae88a7b"
+  api_key = "2a760245f21b3c583435e61ae5b5adef"
   recipe_URL = selected_recipe_URL(selected_num, recipes, api_key)
   uri = URI.parse(recipe_URL)
   response = Net::HTTP.get_response(uri).body
   ingredients = eval(response)[:recipe][:ingredients]
-  return ingredients
+  recipe_id = recipes[selected_num - 1][:recipe_id]
+  recipe_name = recipes[selected_num - 1][:title]
+  return recipe_id, recipe_name, ingredients
 end

@@ -45,7 +45,7 @@ end
 # identify if an intake unit is a weight unit or volume unit
 def v_or_w_identifier(unit)
   v_or_w_hash = {
-    "v" => ["tbsp", "cup", "pint", "quart", "pieces", "tsp", "fl oz", "pkt", "cu in", "envelp", "gal", "slices", "ml", "dash"],
+    "v" => ["tbsp", "cup", "pint", "quart", "tsp", "fl oz", "cu in", "envelp", "gal", "ml", "dash"],
     "w" => ["oz", "g", "lb", "kg"]
   }
   if v_or_w_hash["v"].include?(unit)

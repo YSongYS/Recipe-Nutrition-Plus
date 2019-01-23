@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_01_22_150853) do
+ActiveRecord::Schema.define(version: 2019_01_23_163628) do
 
   create_table "cookings", force: :cascade do |t|
     t.integer "meal_id"
@@ -20,6 +20,7 @@ ActiveRecord::Schema.define(version: 2019_01_22_150853) do
     t.string "unit_v_or_w"
     t.float "weight_in_g"
     t.float "volume_in_cup"
+    t.string "ingredient_na"
   end
 
   create_table "ingredients", force: :cascade do |t|

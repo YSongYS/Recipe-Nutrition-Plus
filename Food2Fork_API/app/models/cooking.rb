@@ -3,13 +3,13 @@ require_relative '../../config/environment'
 # #fuzzy_search_ingredient, a private method to support cook_the_meal
 
 class Cooking < ActiveRecord::Base
-  has_many :ingredients
+  belongs_to :ingredients
   belongs_to :meals
 
 
   def self.cook_the_meal (ingredient_line, meal_id)
     ingredient_line.each do |ingredient_line|
-      @@item, @@parsed_line, @@common_unit, @@usage, @@unit_v_or_w, @@volume_in_cup, @@weight_in_g, @@ingredient_id, @@new_ingredient = nil, nil, nil, nil, nil, nil, nil, nil, nil
+      @@item, @@parsed_line, @@common_unit, @@usage, @@unit_v_or_w, @@volume_in_cup, @@weight_in_g, @@ingredient_id, @@new_ingredient, @@ingredient_na = nil, nil, nil, nil, nil, nil, nil, nil, nil, nil
       @@new_ingredient = Cooking.create
       # if there is no number to read, read the whole line as the item
       if ingredient_line.to_f == 0
@@ -37,8 +37,9 @@ class Cooking < ActiveRecord::Base
       end
 
       @@ingredient_id = @@new_ingredient.fuzzy_search_ingredient(@@item, @@unit_v_or_w)
+      @@ingredient_na = @@item if @@ingredient_id == nil
 
-      @@new_ingredient.update(meal_id: meal_id, ingredient_id: @@ingredient_id, usage: @@usage, common_unit: @@common_unit, unit_v_or_w: @@unit_v_or_w, volume_in_cup: @@volume_in_cup, weight_in_g: @@weight_in_g)
+      @@new_ingredient.update(meal_id: meal_id, ingredient_id: @@ingredient_id, usage: @@usage, common_unit: @@common_unit, unit_v_or_w: @@unit_v_or_w, volume_in_cup: @@volume_in_cup, weight_in_g: @@weight_in_g, ingredient_na: @@ingredient_na)
     end
   end
 

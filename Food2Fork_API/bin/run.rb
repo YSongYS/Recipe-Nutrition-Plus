@@ -7,8 +7,8 @@ user_input = get_user_crave
 recipes = get_top_recipes(user_input)
 print_top_x(recipes, 5)
 selected_num = get_user_select
-ingredients = get_selected_recipes(selected_num, recipes)
-puts ingredients
+a,b,c = get_selected_recipes(selected_num, recipes)
+puts a,b,c
 
 # selected_num = 1
 # 30.times do

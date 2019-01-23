@@ -1,3 +1,7 @@
+# .register_new_user register a new user and auto popualte all target info (every functions before that supports it)
+require_relative '../../config/environment'
+
+
 class User < ActiveRecord::Base
   has_many :meals
 
@@ -86,8 +90,22 @@ class User < ActiveRecord::Base
   # taking nutrition info from ingredients
   # meals.user.each do {sum}
 
-  def my_weekly_calorie_target
-    self.brm * 7
+  def my_weekly_targets
+    bmr_target = self.brm * 7
+    carbo = self.carbo_target * 7
+    fat = self.fat_target * 7
+    protein = self.protein_target * 7
+    return bmr_target, carbo, fat, protein
+  end
+
+  def eating(day_of_the_week, meal_type)
+    user_input = get_user_crave
+    recipes = get_top_recipes(user_input)
+    print_top_x(recipes, 5)
+    selected_num = get_user_select
+    @recipe_id, @meal_name, ingredients = get_selected_recipes(selected_num, recipes)
+    @new_meal = Meal.create(user_id: self.id, day_of_the_week: day_of_the_week, meal_type: meal_type, meal_name: @meal_name, recipe_id: @recipe_id)
+    @new_meal.cooking(ingredients)
   end
 
   # calculate calories so far this week
@@ -95,17 +113,38 @@ class User < ActiveRecord::Base
   # for each meal get full list of ingredients
   # for each ingredient calculate calories
   def calories_consumed_this_week
-    calories = 0
-    meals.all.each do |meal|
-      if meal.user_id == self.id
-        calories +=
-      end
+    trash_can = []
+    calories, carbo, fat, protein = 0, 0, 0, 0
+    Meal.where(user_id: self.id).each do |meal|
+      cal, cab, f, pro, trash_can = meal.meal_nutrition
+      calories += cal
+      carbo += cab
+      fat += f
+      protein += pro
     end
+    return calories, carbo, fat, protein
   end
 
   def compare_calorie_target_to_calories_consumed
     # compare to my_weekly_calorie_target
-    puts "You have eaten #{calories_consumed_this_week / my_weekly_calorie_target * 100}% of your weekly calorie target."
+    puts "You have eaten #{self.calories_consumed_this_week / self.my_weekly_calorie_target * 100}% of your weekly calorie target."
+
   end
 
+  def print_nutritional_report
+    my_summary = {}
+    calories, carbo, fat, protein = self.calories_consumed_this_week
+
+    my_summary["calories"] = [calories]
+    my_summary["carbo"] = [carbo]
+    my_summary["fat"] = [fat]
+    my_summary["protein"] = [protein]
+
+    my_summary["calories"] << self.bmr * 7
+    my_summary["carbo"] << self.carbo_target * 7
+    my_summary["fat"] << self.fat_target * 7
+    my_summary["protein"] << self.protein_target * 7
+
+    puts my_summary
+  end
 end
