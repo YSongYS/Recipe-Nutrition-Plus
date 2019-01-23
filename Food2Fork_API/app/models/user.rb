@@ -28,7 +28,7 @@ class User < ActiveRecord::Base
 
 # calculate weekly calories though meals
 # taking nutrition info from ingredients
-
+# meals.user.each do {sum}
 
 
 
