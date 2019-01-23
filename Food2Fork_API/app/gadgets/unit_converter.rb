@@ -1,12 +1,7 @@
 require_relative '../../config/environment'
 
 ##Ingredients
-#4 small chicken breasts, pounded thin
-#salt and pepper to taste
-#4 jalapenos, diced
-#4 ounces cream cheese, room temperature
-#1 cup cheddar cheese, shredded
-#8 slices bacon
+#["4 small chicken breasts, pounded thin","salt and pepper to taste", "4 jalapenos, diced", "4 ounces cream cheese, room temperature", "1 cup cheddar cheese, shredded", "8 slices bacon"]
 
 # convert all unit format to standarized few
 def unit_converter (unit)
@@ -45,17 +40,24 @@ def unit_converter (unit)
   return new_unit
 end
 
+
+# identify if an intake unit is a weight unit or volume unit
 def v_or_w_identifier(unit)
   v_or_w_hash = {
     "v" => ["tbsp", "cup", "pint", "quart", "pieces", "tsp", "fl oz", "pkt", "cu in", "envelp", "gal", "slices", "ml"],
     "w" => ["oz", "g", "lb", "kg"]
   }
-  unit_v_or_w = "v" if v_or_w_hash["v"].include?(unit)
-  unit_v_or_w = "w" if v_or_w_hash["w"].include?(unit)
+  if v_or_w_hash["v"].include?(unit)
+    unit_v_or_w = "v"
+  elsif v_or_w_hash["w"].include?(unit)
+    unit_v_or_w = "w"
+  else
+    unit_v_or_w = "monster"
+  end
   return unit_v_or_w
 end
 
-
+# convert volume to standard cup (can be adapted to all other units if needed)
 def volume_converter(volume, unit)
   volume_converter = {
     "cup" => 1.0,
@@ -81,7 +83,7 @@ def volume_converter(volume, unit)
   return volume_in_cup
 end
 
-
+# convert volume to standard g (can be adapted to all other units if needed)
 def weight_converter(weight, unit)
 
   weight_converter = {

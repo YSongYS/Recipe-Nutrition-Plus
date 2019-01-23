@@ -10,6 +10,7 @@ class CreateIngredients < ActiveRecord::Migration[4.2]
       t.float :fat_g
       t.float :carbo_g
       t.float :protein_g
+      t.string :unit_v_or_w
     end
   end
 end

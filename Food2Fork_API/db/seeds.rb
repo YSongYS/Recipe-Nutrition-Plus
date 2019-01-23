@@ -43,6 +43,8 @@ CSV.parse(csv, headers: true).each do |row|
   #
   equivalent_volume_cup = volume_converter(1,common_unit_volume)
 
+  unit_v_or_w = v_or_w_identifier(common_unit_volume)
+
   # create new record hash
   new_record = {
     ingredient_long_name:ingredient_long_name,
@@ -53,7 +55,8 @@ CSV.parse(csv, headers: true).each do |row|
     fat_g:fat_g,
     carbo_g:carbo_g,
     protein_g:protein_g,
-    equivalent_volume_cup:equivalent_volume_cup
+    equivalent_volume_cup:equivalent_volume_cup,
+    unit_v_or_w:unit_v_or_w
   }
 
   # store new record hash to the table

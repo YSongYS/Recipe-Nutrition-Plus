@@ -11,6 +11,7 @@ require 'pry'
 
 require 'csv'
 
+
 require_all 'app'
 
 ActiveRecord::Base.establish_connection(
