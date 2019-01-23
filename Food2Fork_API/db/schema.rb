@@ -35,6 +35,14 @@ ActiveRecord::Schema.define(version: 2019_01_22_150853) do
     t.string "unit_v_or_w"
   end
 
+  create_table "meals", force: :cascade do |t|
+    t.integer "user_id"
+    t.string "day_of_the_week"
+    t.string "meal_type"
+    t.string "meal_name"
+    t.integer "recipe_id"
+  end
+
   create_table "users", force: :cascade do |t|
     t.string "name"
     t.string "gender"
@@ -45,14 +53,6 @@ ActiveRecord::Schema.define(version: 2019_01_22_150853) do
     t.float "carbo_target"
     t.float "protein_target"
     t.float "fat_target"
-  end
-  
-  create_table "meals", force: :cascade do |t|
-    t.integer "user_id"
-    t.string "day_of_the_week"
-    t.string "meal_type"
-    t.string "meal_name"
-    t.integer "recipe_id"
   end
 
 end
