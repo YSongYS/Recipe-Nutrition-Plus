@@ -41,32 +41,32 @@ class User < ActiveRecord::Base
 ## Get user info helper methods sdout ##
   # Enter your name
   def get_user_name
-    puts "Please enter you name:"
+    print "Please enter you name: "
     user_input = STDIN.gets.chomp
     # self.name = user_input
   end
 
   # Enter your gender
   def get_user_gender
-    puts "Please input your gender (Male/Female):"
+    print "Please input your gender (Male/Female): "
     user_input = STDIN.gets.chomp.downcase
   end
 
 # Enter your age
   def get_user_age
-    puts "Please input your age:"
+    print "Please input your age: "
     user_input = STDIN.gets.chomp.to_i
   end
 
 # Enter your height
   def get_user_height
-    puts "Please input your height in cm:"
+    print "Please input your height in cm: "
     user_input = STDIN.gets.chomp.to_i
   end
 
 # Enter your weight
   def get_user_weight
-    puts "Please input your weight in kg:"
+    print "Please input your weight in kg: "
     user_input = STDIN.gets.chomp.to_i
   end
 
@@ -83,6 +83,7 @@ class User < ActiveRecord::Base
     new_user.protein_target = new_user.calculate_store_protein_target
     new_user.fat_target = new_user.calculate_store_fat_target
     new_user.save
+    return new_user
   end
 
 
@@ -99,13 +100,41 @@ class User < ActiveRecord::Base
   end
 
   def eating(day_of_the_week, meal_type)
-    user_input = get_user_crave
-    recipes = get_top_recipes(user_input)
-    print_top_x(recipes, 5)
-    selected_num = get_user_select
-    @recipe_id, @meal_name, ingredients = get_selected_recipes(selected_num, recipes)
-    @new_meal = Meal.create(user_id: self.id, day_of_the_week: day_of_the_week, meal_type: meal_type, meal_name: @meal_name, recipe_id: @recipe_id)
-    @new_meal.cooking(ingredients)
+    user_input = get_user_crave(day_of_the_week, meal_type)
+    if user_input!= "SIMS"
+      recipes = get_top_recipes(user_input)
+      print_top_x(user_input, recipes, 5)
+      selected_num = get_user_select
+      @recipe_id, @meal_name, ingredients = get_selected_recipes(selected_num, recipes)
+      @new_meal = Meal.create(user_id: self.id, day_of_the_week: day_of_the_week, meal_type: meal_type, meal_name: @meal_name, recipe_id: @recipe_id)
+      @new_meal.cooking(ingredients)
+      return 'That was delicious!'
+    else
+      self.sims_life
+      return 'SIMS'
+    end
+  end
+
+  # automatic eating. yes creepy
+  def sims_life
+    #search through Meal class with user_id. For week_day and meal_type not exist, automatically populate
+    #cook the meal afterwards
+    week_day = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"]
+    meal_type = ["Breakfast", "Lunch", "Dinner"]
+
+    week_day.each do |week_day|
+      meal_type.each do |meal_type|
+        if Meal.where(user_id: self.id, day_of_the_week:week_day, meal_type:meal_type) == []
+          random_recipe = {}
+          random_recipe = get_recipe_bank.sample
+          recipe_id = random_recipe[:recipe_id]
+          meal_name = random_recipe[:recipe_name]
+          ingredients = random_recipe[:ingredients]
+          new_meal = Meal.create(user_id: self.id, day_of_the_week: week_day, meal_type: meal_type, meal_name: meal_name, recipe_id: recipe_id)
+          new_meal.cooking(ingredients)
+        end
+      end
+    end
   end
 
   # calculate calories so far this week
@@ -161,6 +190,7 @@ class User < ActiveRecord::Base
 
     return my_summary
   end
+
 
   #final output in the form of a weekly table showing cals and macros
   def make_summary_table
@@ -288,4 +318,7 @@ class User < ActiveRecord::Base
       end
     end
 
+    def get_weekly_nutritional_target
+       calories, carbo, fat, protein = self.bmr * 7, self.carbo_target * 7, self.fat_target * 7, self.protein_target * 7
+    end
 end

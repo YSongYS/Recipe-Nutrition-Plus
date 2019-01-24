@@ -1,53 +1,26 @@
 require_relative '../config/environment'
 
+# Welcome msg: did you know? did you know? did you know? Ready to ge started?
+welcome_to_app
 
-# puts 'enter name'
-# gets.chomp
-user_input = get_user_crave
-recipes = get_top_recipes(user_input)
-print_top_x(recipes, 5)
-selected_num = get_user_select
-a,b,c = get_selected_recipes(selected_num, recipes)
-puts a,b,c
+# First, let us know a bit about you..
+## Prompt user input
+# Alright, base on your profile, this should be your weekly nutrition targe.
+## Means nothing to you? Don't worry. That's what we are here for
+register_app
 
-# selected_num = 1
-# 30.times do
-#
-#   File.write('app/data_cleaning/ingredient_sandbox.md',ingredients)
-#   #
+# Welcome to Monday. Ready to pick your breakfast yet?
+week_day_time_machine
+## get crave
+  ## Decision fatique? (time delayed) - Autopopulate
+  ## SIMS LIFE, autopoplate the full week
+## select meal
+## meal report card
+## Hmm.. looks a bit high on x, balance it out in the next meal
 
-
-RECIPES = ["1 pound Italian Sausage",
-"1 pound Ground Beef",
-"1 can (28 Ounce Can) Whole Tomatoes, With Juice",
-"2 cans (14.5 Ounce) Tomato Sauce Or Marinara Sauce",
-"2 teaspoons Italian Seasoning",
-"1/2 teaspoon Red Pepper Flakes",
-"Salt And Pepper, to taste",
-"16 ounces, weight Ziti Or Mostaciolli, Cooked Until Not Quite Al Dente",
-"1 tub (15 Ounce) Whole Milk Ricotta Cheese",
-"1-1/2 pound Mozzarella Cheese, Grated",
-"1/2 cup Grated Parmesan Cheese",
-"1 whole Egg",
-"Fresh Minced Parsley",
-"1/2 pound ground beef",
-"6 strips bacon, cut into 1 inch pieces",
-"1 small onion, diced",
-"1 clove garlic, chopped",
-"4 ounces cream cheese, room temperature",
-"1/2 cup sour cream",
-"1/4 cup mayonnaise",
-"1/2 cup mozzarella, shredded",
-"1/2 cup cheddar cheese, shredded",
-"1 tablespoon worcestershire sauce",
-"2 tablespoon ketchup",
-"2 Tablespoons Butter",
-"2 whole Large Onions, Halved And Sliced Thin",
-"1/4 cup Beef Broth",
-"7 dashes Worcestershire Sauce",
-"Splash Of Red Or White Wine",
-"1/2 cup Grated Gruyere Cheese (can Use Swiss)",
-"Kosher Salt",
-"24 whole White Or Crimini Mushrooms, Washed And Stems Removed",
-"Minced Parsley",
-"1-1/2 pound Ground Beef"]
+weekly_summary_time
+# Welcome to the Recipe Nutrition+ Weekly Log
+## Name = Yannick Hoegerle
+## Diet type = Maintain
+## Weekly Log
+## How you are compare to peers

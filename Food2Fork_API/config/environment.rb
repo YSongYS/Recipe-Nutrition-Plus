@@ -10,6 +10,7 @@ require 'json'
 require 'pry'
 
 require 'csv'
+require 'colorize'
 
 
 require_all 'app'
@@ -20,3 +21,4 @@ ActiveRecord::Base.establish_connection(
 )
 
 # require 'tty-table'
+# ActiveRecord::Base.logger.level = 1
