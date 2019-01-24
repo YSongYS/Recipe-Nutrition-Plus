@@ -64,15 +64,14 @@ def week_day_time_machine
   # put a daily summary print out here.
   puts "DAILY SUMMARY PLACE HOLDER"
   end
+  return user
 end
 
-def weekly_meals
-end
 
-def weekly_summary_time
+def weekly_summary_time(user)
   sleep 1.5
   puts  ""
   puts "-------------------------------------------------------------"
   puts "Let's take a look at your result this week!"
-  puts "TABLE PLACEHOLDER", "", ""
+  user.make_summary_table
 end

@@ -100,9 +100,15 @@ class User < ActiveRecord::Base
   end
 
   def eating(day_of_the_week, meal_type)
-    user_input = get_user_crave(day_of_the_week, meal_type)
-    if user_input!= "SIMS"
+    while true
+      user_input = get_user_crave(day_of_the_week, meal_type)
       recipes = get_top_recipes(user_input)
+      binding.pry
+      break if recipes != [] || user_input == "SIMS"
+      puts "#{user_input.capitalize} is apparently not EDIBLE! Try another food."
+    end
+
+    if user_input!= "SIMS"
       print_top_x(user_input, recipes, 5)
       selected_num = get_user_select
       @recipe_id, @meal_name, ingredients = get_selected_recipes(selected_num, recipes)
@@ -205,6 +211,7 @@ class User < ActiveRecord::Base
       ]
     puts table.render(:ascii)
     puts "", "Summary Report"
+    puts "#{self.cal_performance_summary_report}"
     puts "#{self.give_meal_recommendations}"
     puts "+------------+------+-------+---------+--------+------+--------+------+-------------+-------------+"
   end
@@ -272,15 +279,15 @@ class User < ActiveRecord::Base
     winner = [carbs_from_target, fat_from_target, protein_from_target].max_by {|macro| macro.abs}
     #find whether that macro is pos or  negative
       if winner == protein_from_target && winner < 0
-        puts "Your protein intake this week was too low.\nWhy don't you try Beer-Marinated Flank Steak with Aji and Guacamole next week!"
+        puts "Your protein ratio for this week was too low.\nWhy don't you try Beer-Marinated Flank Steak with Aji and Guacamole next week!"
       elsif winner == protein_from_target && winner >= 0
-        puts "Your protein intake this week was too high.\nWhy don't you try a Vegan Caesar Salad next week!"
+        puts "Your protein ratio for this week was too high.\nWhy don't you try a Vegan Caesar Salad next week!"
       elsif winner == fat_from_target && winner < 0
-        puts "Your fat intake this week was too low.\nWhy don't you try a Baileys and chocolate cheesecake next week!"
+        puts "Your fat ratio for this week was too low.\nWhy don't you try a Baileys and chocolate cheesecake next week!"
       elsif winner == fat_from_target && winner >= 0
-        puts "Your fat intake this week was too high.\nWhy don't you try an Asparagus Salad with Shrimp next week!"
+        puts "Your fat ratio for this week was too high.\nWhy don't you try an Asparagus Salad with Shrimp next week!"
       elsif winner == carbs_from_target && winner < 0
-        puts "Your carbohydrate intake this week was too low.\nWhy don't you try our Winter Pasta recipie next week!"
+        puts "Your carbohydrate ratio for this week was too low.\nWhy don't you try our Winter Pasta recipie next week!"
       elsif winner == carbs_from_target && winner >= 0
         puts "Your carbohydrate intake this week was too high.\nWhy don't you try Bacon Wrapped Jalapeno Popper Stuffed Chicken next week!"
       end
@@ -293,6 +300,16 @@ class User < ActiveRecord::Base
          "😃 👆"
        end
      end
+
+     def cal_performance_summary_report
+        if calories_consumed_this_week[0].round > (self.bmr * 7 * 1.1).round
+          "Your overall calorie intake is too high (eat less, cough cough!)"
+        elsif calories_consumed_this_week[0].round < (self.bmr * 7 * 0.9).round
+          "Your overall calorie intake is too low (feel free to have more desert!)"
+        else
+          "Well done for following your meal plan. Keep it up!"
+        end
+      end
 
     def carb_performance
       if calories_consumed_this_week[1].round > (self.carbo_target * 7).round

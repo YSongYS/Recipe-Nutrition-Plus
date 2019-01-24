@@ -10,7 +10,7 @@ welcome_to_app
 register_app
 
 # Welcome to Monday. Ready to pick your breakfast yet?
-week_day_time_machine
+user= week_day_time_machine
 ## get crave
   ## Decision fatique? (time delayed) - Autopopulate
   ## SIMS LIFE, autopoplate the full week
@@ -18,7 +18,7 @@ week_day_time_machine
 ## meal report card
 ## Hmm.. looks a bit high on x, balance it out in the next meal
 
-weekly_summary_time
+weekly_summary_time(user)
 # Welcome to the Recipe Nutrition+ Weekly Log
 ## Name = Yannick Hoegerle
 ## Diet type = Maintain
