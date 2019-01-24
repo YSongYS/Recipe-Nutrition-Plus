@@ -14,6 +14,7 @@ class Cooking < ActiveRecord::Base
       # if there is no number to read, read the whole line as the item
       if ingredient_line.to_f == 0
         @@item = ingredient_line
+        @@usage = 1
       # if there is number to read, see if the is unit to read
       else
         @@parsed_line = ingredient_line.split(' ',3)

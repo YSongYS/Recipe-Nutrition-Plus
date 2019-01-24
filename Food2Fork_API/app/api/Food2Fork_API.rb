@@ -1,16 +1,22 @@
 # require_relative '../../config/environment'
 
-def get_user_crave
-  puts "What do you feel like having today?"
+def get_user_crave(day_of_the_week, meal_type)
+  puts "Happy #{day_of_the_week}! What do you feel like having for #{meal_type}?".green
   user_input = STDIN.gets.chomp
   return user_input
 end
 
 def get_user_select
-  puts "Which recipe would you like to go with?"
+  puts ""
+  puts "Which recipe would you like to go with?".green
   selected_num = STDIN.gets.chomp.to_i
+  slowprint(".. cooking the meal".split)
+  print "\n"
+  slowprint(".. eating the meal".split)
+  print "\n"
   return selected_num
 end
+
 
 # given user_input on key gredient or receipe name, return the URL to retrieve recipe search data from API
 def top_recipe_URL(user_input, api_key)
@@ -22,7 +28,7 @@ end
 # given user_input on key gredient or receipe name, return the top recipe search researchs in an array of hashes
 # CHANGE CHANGE CHANGE add filter to elimnate bad recipes, such as fries 3
 def get_top_recipes (user_input)
-  api_key = "2a760245f21b3c583435e61ae5b5adef"
+  api_key = "1469fbff5fa553becb01a5b3a5ef1d71"
   recipes_URL = top_recipe_URL(user_input, api_key)
   uri = URI.parse(recipes_URL)
   response = Net::HTTP.get_response(uri).body
@@ -31,10 +37,12 @@ def get_top_recipes (user_input)
 end
 
 # print out title of the top x recipes for user to choose from
-def print_top_x (recipes, top_x)
+def print_top_x (user_input,recipes, top_x)
   index = 0
+  puts ""
+  puts "Here are the top recipes for #{user_input.downcase}"
   while index < top_x do
-    puts "#{index+1}. #{recipes[index][:title]}"
+    puts "   #{index+1}. #{recipes[index][:title]}"
     index += 1
   end
 end
@@ -47,7 +55,7 @@ def selected_recipe_URL(selected_num, recipes, api_key)
 end
 
 def get_selected_recipes(selected_num, recipes)
-  api_key = "2a760245f21b3c583435e61ae5b5adef"
+  api_key = "1469fbff5fa553becb01a5b3a5ef1d71"
   recipe_URL = selected_recipe_URL(selected_num, recipes, api_key)
   uri = URI.parse(recipe_URL)
   response = Net::HTTP.get_response(uri).body
