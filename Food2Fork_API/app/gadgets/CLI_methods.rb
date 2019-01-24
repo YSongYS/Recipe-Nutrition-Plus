@@ -66,9 +66,6 @@ def week_day_time_machine
   end
 end
 
-def weekly_meals
-end
-
 def weekly_summary_time
   sleep 1.5
   puts  ""

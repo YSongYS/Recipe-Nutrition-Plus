@@ -177,6 +177,11 @@ class User < ActiveRecord::Base
     puts my_summary
   end
 
+  # drop down menu to check
+  def weekly_meal_table
+    weekly_meal
+  end
+
   def get_weekly_nutritional_target
     calories, carbo, fat, protein = self.bmr * 7, self.carbo_target * 7, self.fat_target * 7, self.protein_target * 7
   end
