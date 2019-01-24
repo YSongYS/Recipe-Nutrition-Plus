@@ -20,4 +20,5 @@ ActiveRecord::Base.establish_connection(
   database: "db/development.sqlite"
 )
 
-#ActiveRecord::Base.logger.level = 1
+# require 'tty-table'
+ # ActiveRecord::Base.logger.level = 1

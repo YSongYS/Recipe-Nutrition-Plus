@@ -1,5 +1,5 @@
 # .register_new_user register a new user and auto popualte all target info (every functions before that supports it)
-require_relative '../../config/environment'
+require_relative "../../config/environment"
 
 
 class User < ActiveRecord::Base
@@ -100,9 +100,15 @@ class User < ActiveRecord::Base
   end
 
   def eating(day_of_the_week, meal_type)
-    user_input = get_user_crave(day_of_the_week, meal_type)
-    if user_input!= "SIMS"
+    while true
+      user_input = get_user_crave(day_of_the_week, meal_type)
       recipes = get_top_recipes(user_input)
+      binding.pry
+      break if recipes != [] || user_input == "SIMS"
+      puts "#{user_input.capitalize} is apparently not EDIBLE! Try another food."
+    end
+
+    if user_input!= "SIMS"
       print_top_x(user_input, recipes, 5)
       selected_num = get_user_select
       @recipe_id, @meal_name, ingredients = get_selected_recipes(selected_num, recipes)
@@ -154,6 +160,20 @@ class User < ActiveRecord::Base
     return calories, carbo, fat, protein
   end
 
+  def calories_consumed(day)
+
+    trash_can = []
+    calories, carbo, fat, protein = 0, 0, 0, 0
+    Meal.where(user_id: self.id, day_of_the_week: "#{day}").each do |meal|
+      cal, cab, f, pro, trash_can = meal.meal_nutrition
+      calories += cal
+      carbo += cab
+      fat += f
+      protein += pro
+    end
+    return calories, carbo, fat, protein
+  end
+
   def compare_calorie_target_to_calories_consumed
     # compare to my_weekly_calorie_target
     puts "You have eaten #{self.calories_consumed_this_week / self.my_weekly_calorie_target * 100}% of your weekly calorie target."
@@ -174,15 +194,148 @@ class User < ActiveRecord::Base
     my_summary["fat"] << self.fat_target * 7
     my_summary["protein"] << self.protein_target * 7
 
-    puts my_summary
+    return my_summary
   end
 
-  # drop down menu to check
-  def weekly_meal_table
-    weekly_meal
+
+  #final output in the form of a weekly table showing cals and macros
+  def make_summary_table
+    days = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"]
+
+    table = TTY::Table.new ["Unit", "Monday","Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday", "Weekly Actual", "Weekly Target", "Performance"],
+      [
+        ["Calories", "#{calories_consumed(days[0])[0].round}", "#{calories_consumed(days[1])[0].round}", "#{calories_consumed(days[2])[0].round}", "#{calories_consumed(days[3])[0].round}", "#{calories_consumed(days[4])[0].round}", "#{calories_consumed(days[5])[0].round}", "#{calories_consumed(days[6])[0].round}", "#{calories_consumed_this_week[0].round}", "#{(self.bmr * 7).round}", "#{self.cal_performance}"],
+        ["Carbohydrate", "#{calories_consumed(days[0])[1].round}", "#{calories_consumed(days[1])[1].round}", "#{calories_consumed(days[2])[1].round}", "#{calories_consumed(days[3])[1].round}", "#{calories_consumed(days[4])[1].round}", "#{calories_consumed(days[5])[1].round}", "#{calories_consumed(days[6])[1].round}", "#{calories_consumed_this_week[1].round}", "#{(self.carbo_target * 7).round}", "#{self.carb_performance}"],
+        ["Fat", "#{calories_consumed(days[0])[2].round}", "#{calories_consumed(days[1])[2].round}", "#{calories_consumed(days[2])[2].round}", "#{calories_consumed(days[3])[2].round}", "#{calories_consumed(days[4])[2].round}", "#{calories_consumed(days[5])[2].round}", "#{calories_consumed(days[6])[2].round}", "#{calories_consumed_this_week[2].round}", "#{(self.fat_target * 7).round}", "#{self.fat_performance}"],
+        ["Protein", "#{calories_consumed(days[0])[3].round}", "#{calories_consumed(days[1])[3].round}", "#{calories_consumed(days[2])[3].round}", "#{calories_consumed(days[3])[3].round}", "#{calories_consumed(days[4])[3].round}", "#{calories_consumed(days[5])[3].round}", "#{calories_consumed(days[6])[3].round}", "#{calories_consumed_this_week[3].round}", "#{(self.protein_target * 7).round}", "#{self.protein_performance}"]
+      ]
+    puts table.render(:ascii)
+    puts "", "Summary Report"
+    puts "#{self.cal_performance_summary_report}"
+    puts "#{self.give_meal_recommendations}"
+    puts "+------------+------+-------+---------+--------+------+--------+------+-------------+-------------+"
   end
 
-  def get_weekly_nutritional_target
-    calories, carbo, fat, protein = self.bmr * 7, self.carbo_target * 7, self.fat_target * 7, self.protein_target * 7
-  end
+  # def macro_ratio_met(day)
+  #   macro_total = "calories_consumed_#{day}"[1] + "calories_consumed_#{day}"[2] + "calories_consumed_#{day}"[3]
+  #   #carbs
+  #     if ("calories_consumed_#{day}"[1] / macro_total).between?(0.45, 0.55)
+  #       return " 👏 😊 "
+  #     elsif ("calories_consumed_#{day}"[1] / macro_total) > (0.55)
+  #       return "😈 👆"
+  #     elsif ("calories_consumed_#{day}"[1] / macro_total) < (0.45)
+  #       return " 😬 👇 "
+  #   end
+  # end
+  #
+  # def carbs_ratio_met(day)
+  #   macro_total = "calories_consumed_#{day}"[1] + "calories_consumed_#{day}"[2] + "calories_consumed_#{day}"[3]
+  #   #carbs
+  #     if ("calories_consumed_#{day}"[1] / macro_total).between?(0.45, 0.55)
+  #       return " 👏 😊 "
+  #     elsif ("calories_consumed_#{day}"[1] / macro_total) > (0.55)
+  #       return "😈 👆"
+  #     elsif ("calories_consumed_#{day}"[1] / macro_total) < (0.45)
+  #       return " 😬 👇 "
+  #   end
+  # end
+  #
+  # def protein_ratio_met(day)
+  #   macro_total = "calories_consumed_#{day}"[1] + "calories_consumed_#{day}"[2] + "calories_consumed_#{day}"[3]
+  #   #carbs
+  #     if ("calories_consumed_#{day}"[1] / macro_total).between?(0.10, 0.20)
+  #       return " 👏 😊 "
+  #     elsif ("calories_consumed_#{day}"[1] / macro_total) > (0.20)
+  #       return "😈 👆"
+  #     elsif ("calories_consumed_#{day}"[1] / macro_total) < (0.10)
+  #       return " 😬 👇 "
+  #   end
+  # end
+  #
+  # def fat_ratio_met(day)
+  #   macro_total = "calories_consumed_#{day}"[1] + "calories_consumed_#{day}"[2] + "calories_consumed_#{day}"[3]
+  #   #carbs
+  #     if ("calories_consumed_#{day}"[1] / macro_total).between?(30, 40)
+  #       return " 👏 😊 "
+  #     elsif ("calories_consumed_#{day}"[1] / macro_total) > (40)
+  #       return "😈 👆"
+  #     elsif ("calories_consumed_#{day}"[1] / macro_total) < (30)
+  #       return " 😬 👇 "
+  #   end
+  # end
+
+
+  def give_meal_recommendations
+    #find ratio
+    total = self.calories_consumed_this_week[1] + self.calories_consumed_this_week[2] + self.calories_consumed_this_week[3]
+    carb_ratio = self.calories_consumed_this_week[1] / total
+    fat_ratio = self.calories_consumed_this_week[2] / total
+    protein_ratio = self.calories_consumed_this_week[3] / total
+    #find difference btween actual ratio and target ratio
+    carbs_from_target = carb_ratio - 0.50
+    fat_from_target = fat_ratio - 0.15
+    protein_from_target = protein_ratio - 0.35
+    #find macro with biggest difference
+    winner = [carbs_from_target, fat_from_target, protein_from_target].max_by {|macro| macro.abs}
+    #find whether that macro is pos or  negative
+      if winner == protein_from_target && winner < 0
+        puts "Your protein ratio for this week was too low.\nWhy don't you try Beer-Marinated Flank Steak with Aji and Guacamole next week!"
+      elsif winner == protein_from_target && winner >= 0
+        puts "Your protein ratio for this week was too high.\nWhy don't you try a Vegan Caesar Salad next week!"
+      elsif winner == fat_from_target && winner < 0
+        puts "Your fat ratio for this week was too low.\nWhy don't you try a Baileys and chocolate cheesecake next week!"
+      elsif winner == fat_from_target && winner >= 0
+        puts "Your fat ratio for this week was too high.\nWhy don't you try an Asparagus Salad with Shrimp next week!"
+      elsif winner == carbs_from_target && winner < 0
+        puts "Your carbohydrate ratio for this week was too low.\nWhy don't you try our Winter Pasta recipie next week!"
+      elsif winner == carbs_from_target && winner >= 0
+        puts "Your carbohydrate intake this week was too high.\nWhy don't you try Bacon Wrapped Jalapeno Popper Stuffed Chicken next week!"
+      end
+    end
+
+    def cal_performance
+       if calories_consumed_this_week[0].round > (self.bmr * 7).round
+         "😬 👇"
+       elsif calories_consumed_this_week[0].round < (self.bmr * 7).round
+         "😃 👆"
+       end
+     end
+
+     def cal_performance_summary_report
+        if calories_consumed_this_week[0].round > (self.bmr * 7 * 1.1).round
+          "Your overall calorie intake is too high (eat less, cough cough!)"
+        elsif calories_consumed_this_week[0].round < (self.bmr * 7 * 0.9).round
+          "Your overall calorie intake is too low (feel free to have more desert!)"
+        else
+          "Well done for following your meal plan. Keep it up!"
+        end
+      end
+
+    def carb_performance
+      if calories_consumed_this_week[1].round > (self.carbo_target * 7).round
+        "😬 👇"
+       elsif calories_consumed_this_week[1].round < (self.carbo_target * 7).round
+        "😃 👆"
+      end
+    end
+
+    def fat_performance
+      if calories_consumed_this_week[2].round > (self.fat_target * 7).round.round
+        "😬 👇"
+      elsif calories_consumed_this_week[2].round < (self.fat_target * 7).round.round
+        "😃 👆"
+      end
+    end
+
+    def protein_performance
+      if calories_consumed_this_week[3].round > (self.protein_target * 7).round
+        "😬 👇"
+      elsif calories_consumed_this_week[3].round < (self.protein_target * 7).round
+        "😃 👆"
+      end
+    end
+
+    def get_weekly_nutritional_target
+       calories, carbo, fat, protein = self.bmr * 7, self.carbo_target * 7, self.fat_target * 7, self.protein_target * 7
+    end
 end

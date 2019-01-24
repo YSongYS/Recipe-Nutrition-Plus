@@ -13,7 +13,7 @@ class Meal < ActiveRecord::Base
   def meal_nutrition
     nutrition_na = []
     calories, carbo, fat, protein = 0, 0, 0, 0
-    serving = 4
+    serving = 5
 
     Cooking.where(meal_id: self.id).each do |cooking|
       # if ingredient not recognizable, put it into the nutrition na string to build the notes to user later
@@ -35,7 +35,7 @@ class Meal < ActiveRecord::Base
         calories += ingredient.calories_kCal * portion / serving
         carbo += ingredient.carbo_g * portion / serving
         fat += ingredient.fat_g * portion / serving
-        protein += ingredient.protein_g * portion / serving 
+        protein += ingredient.protein_g * portion / serving
       end
     end
 
