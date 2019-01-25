@@ -4,7 +4,7 @@ Recipe Nutrition Plus is a Ruby based command line application that helps users 
 
 With Recipe Nutrition Plus users can
 
-- Understand their personal nutritional requirements
+- Understand their personal nutritional requirements based on physiology and activity_level
 - Get meal recommendations and recipes
 - Create weekly meal plans  
 - Track their calories and macros
