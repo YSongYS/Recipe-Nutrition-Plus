@@ -14,7 +14,8 @@ end
 
 def new_or_old_user
   prompt = TTY::Prompt.new
-  prompt.select("New to Nutrition+?", %w(Sign\ up Log\ in))
+  answer = prompt.select("New to Nutrition+?", %w(Sign\ up Log\ in))
+  register_app if answer == "Sign up"
 end
 
 def welcome_to_app
@@ -117,8 +118,6 @@ def week_day_time_machine
       puts ""
 
     end
-  # put a daily summary print out here.
-  puts "DAILY SUMMARY PLACE HOLDER"
   end
   return user
 end
@@ -129,4 +128,41 @@ def weekly_summary_time(user)
   puts "-------------------------------------------------------------"
   puts "Let's take a look at your result this week!"
   user.make_summary_table
+
+  prompt = TTY::Prompt.new
+  user_input = prompt.select("Other features", %w(See\ meals\ consumed\ this\ week Grocery\ list Start\ a\ new\ week))
+  meals_consumed_this_week(user) if user_input == "See meals consumed this week"
+  new_week if user_input == "Start a new week"
+  #grocery_list if user_input == "Grocery list"
+end
+
+def meals_consumed_this_week (user)
+  while true
+    system 'clear'
+    header
+    prompt = TTY::Prompt.new
+    week_day = prompt.select("Which day of the week?", %w(Monday Tuesday Wednesday Thursday Friday Saturday Sunday))
+    prompt = TTY::Prompt.new
+    meal_type = prompt.select("Which meal?", %w(Breakfast Lunch Dinner))
+    puts "", "", ""
+    puts "On #{week_day}, you had #{user.meal_on_day_x(week_day,meal_type)} for #{meal_type}."
+
+    prompt = TTY::Prompt.new
+    user_input = prompt.select("Next>", %w(See\ another\ meal\ consumed\ this\ week Start\ a\ new\ week))
+    if user_input == "Start a new week"
+      new_week
+      break
+    end
+
+  end
+end
+
+def grocery_list
+  puts 'tbd'
+end
+
+def new_week
+  User.destroy_all
+  Meal.destroy_all
+  Cooking.destroy_all
 end

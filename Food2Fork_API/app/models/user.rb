@@ -376,4 +376,9 @@ class User < ActiveRecord::Base
     def get_weekly_nutritional_target
        calories, carbo, fat, protein = self.bmr * 7, self.carbo_target * 7, self.fat_target * 7, self.protein_target * 7
     end
+
+    def meal_on_day_x(day_of_the_week,meal_type)
+      meal = Meal.where(day_of_the_week:day_of_the_week,meal_type:meal_type,user_id:self.id)[0]
+      return meal.meal_name
+    end
 end

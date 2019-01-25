@@ -4,7 +4,7 @@ def get_recipe_bank
   recipe_bank = [
     {:recipe_id=>"26851", :recipe_name=>"Roast Sticky Chicken Rotisserie Style", :ingredients=>["4 teaspoons salt", "2 teaspoons paprika",
     "1 teaspoon onion powder", "1 teaspoon dried thyme", "1 teaspoon white pepper", "1/2 teaspoon cayenne pepper", "1/2 teaspoon black pepp
-    er", "1/2 teaspoon garlic powder", "2 onions, quartered", "2 (4 pound) whole chickens"]},
+    er", "1/2 teaspoon garlic powder", "2 onions, quartered", "4 pound whole chickens"]},
     {:recipe_id=>"35120", :recipe_name=>"Bacon Wrapped Jalapeno Popper Stuffed Chicken", :ingredients=>["4 small chicken breasts, pounded t
     hin", "salt and pepper to taste", "4 jalapenos, diced", "4 ounces cream cheese, room temperature", "1 cup cheddar cheese, shredded", "8
      slices bacon\n"]},
