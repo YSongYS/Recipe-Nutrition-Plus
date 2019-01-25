@@ -41,15 +41,24 @@ class User < ActiveRecord::Base
 ## Get user info helper methods sdout ##
   # Enter your name
   def get_user_name
-    print "Please enter you name: "
-    user_input = STDIN.gets.chomp
+    prompt = TTY::Prompt.new
+    user_input = prompt.ask('What is your name?')
+    return user_input
     # self.name = user_input
+  end
+
+  def get_user_password
+    prompt = TTY::Prompt.new
+    user_input = prompt.mask('Enter a password')
+    return user_input
   end
 
   # Enter your gender
   def get_user_gender
-    print "Please input your gender (Male/Female): "
-    user_input = STDIN.gets.chomp.downcase
+    prompt = TTY::Prompt.new
+    user_input = prompt.select("What's your gender?", %w(Female Male Others))
+    user_input = 'male' if user_input == 'Others'
+    return user_input.downcase
   end
 
 # Enter your age
@@ -70,14 +79,42 @@ class User < ActiveRecord::Base
     user_input = STDIN.gets.chomp.to_i
   end
 
+  def get_diet_type
+    prompt = TTY::Prompt.new
+    user_input = prompt.select("What do you hope to achieve with your diet?", %w(Gain\ weight Maintain\ weight Loose\ weight))
+    return user_input.downcase
+  end
+
+  def get_activity_level
+    prompt = TTY::Prompt.new
+    choices = %w(Walking\ (min\ 10k\ steps) Runing\ and\ cycling Gym Swimming Yoga Other\sports)
+    user_input = prompt.multi_select("What type of workout do you do?", choices)
+    return user_input
+  end
+
+  def get_work_out_intensity
+    prompt = TTY::Prompt.new
+    user_input = prompt.select("How often do you work out?", %w(Never 1-2\ times\ a\ week 3-4\ times\ a\ week Over\ 5\ times\ a\ week))
+    return user_input.downcase
+  end
+
 # create new user, ask for info, save to table
   def self.register_new_user
     new_user = User.create
     new_user.name = new_user.get_user_name
+    new_user.password = new_user.get_user_password
+    system 'clear'
+    header
+    puts "Welcome to Nutrition+, #{new_user.name}!", ""
+    puts "First, let us get to know a bit about you...".green
+    puts "-------------------------------------------------------------"
     new_user.gender = new_user.get_user_gender
     new_user.age = new_user.get_user_age
     new_user.height = new_user.get_user_height
     new_user.weight = new_user.get_user_weight
+    new_user.diet_type = new_user.get_diet_type
+    new_user.activity_level = new_user.get_activity_level
+    new_user.work_out_intensity = new_user.get_work_out_intensity
     new_user.calculate_store_bmr
     new_user.carbo_target =  new_user.calculate_store_carbo_target
     new_user.protein_target = new_user.calculate_store_protein_target
@@ -100,26 +137,27 @@ class User < ActiveRecord::Base
   end
 
   def eating(day_of_the_week, meal_type)
-    while true
-      user_input = get_user_crave(day_of_the_week, meal_type)
-      recipes = get_top_recipes(user_input)
-      binding.pry
-      break if recipes != [] || user_input == "SIMS"
-      puts "#{user_input.capitalize} is apparently not EDIBLE! Try another food."
-    end
+   while true
+     user_input = get_user_crave(day_of_the_week, meal_type)
+     recipes = get_top_recipes(user_input)
+     break if recipes != [] || user_input == "SIMS"
+     puts "#{user_input.capitalize} is apparently not EDIBLE! Try another food."
+     sleep 3
+   end
 
-    if user_input!= "SIMS"
-      print_top_x(user_input, recipes, 5)
-      selected_num = get_user_select
-      @recipe_id, @meal_name, ingredients = get_selected_recipes(selected_num, recipes)
-      @new_meal = Meal.create(user_id: self.id, day_of_the_week: day_of_the_week, meal_type: meal_type, meal_name: @meal_name, recipe_id: @recipe_id)
-      @new_meal.cooking(ingredients)
-      return 'That was delicious!'
-    else
-      self.sims_life
-      return 'SIMS'
-    end
-  end
+   if user_input!= "SIMS"
+     print_top_x(user_input, recipes, 5)
+     selected_num = get_user_select
+     @recipe_id, @meal_name, ingredients = get_selected_recipes(selected_num, recipes)
+     @new_meal = Meal.create(user_id: self.id, day_of_the_week: day_of_the_week, meal_type: meal_type, meal_name: @meal_name, recipe_id: @recipe_id)
+     @new_meal.cooking(ingredients)
+     return 'That was delicious!'
+   else
+     self.sims_life
+     return 'SIMS'
+   end
+ end
+
 
   # automatic eating. yes creepy
   def sims_life
