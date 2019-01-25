@@ -24,4 +24,4 @@ ActiveRecord::Base.establish_connection(
 )
 
 # require 'tty-table'
-ActiveRecord::Base.logger.level = 1
+# ActiveRecord::Base.logger.level = 1
