@@ -263,6 +263,8 @@ class User < ActiveRecord::Base
     puts "", "Summary Report"
     puts "#{self.cal_performance_summary_report}"
     puts "#{self.give_meal_recommendations}"
+    puts "","Activity Report"
+    puts "#{self.activity_performance_summary_report}"
     puts "+------------+------+-------+---------+--------+------+--------+------+-------------+-------------+"
   end
 
@@ -327,7 +329,6 @@ class User < ActiveRecord::Base
     protein_from_target = protein_ratio - 0.35
     #find macro with biggest difference
     winner = [carbs_from_target, fat_from_target, protein_from_target].max_by {|macro| macro.abs}
-    binding.pry
     #find whether that macro is pos or  negative
       if winner == protein_from_target && winner < 0
         puts "Your protein ratio for this week was too low.\nWhy don't you try Beer-Marinated Flank Steak with Aji and Guacamole next week!"
@@ -364,9 +365,11 @@ class User < ActiveRecord::Base
 
       def activity_performance_summary_report
         if self.activity_level != []
-          puts "Well done for doing"
+          puts "Well done for doing the following activities this week!"
           puts self.activity_level
-          puts "this week. \nSee if you can add an extra day of #{self.activity_level[rand(0...self.activity_level.length)]}"
+          puts "See if you can add an extra day of sport next week"
+        else
+          puts "You did not do enough exercise this week. Try and do at least activities next week!"
         end
       end
 
