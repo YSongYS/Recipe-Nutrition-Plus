@@ -227,12 +227,24 @@ class User < ActiveRecord::Base
     my_summary["fat"] = [fat]
     my_summary["protein"] = [protein]
 
-    my_summary["calories"] << self.bmr * 7
-    my_summary["carbo"] << self.carbo_target * 7
-    my_summary["fat"] << self.fat_target * 7
-    my_summary["protein"] << self.protein_target * 7
+    my_summary["calories"] << self.bmr * 7 * self.loose_or_gain
+    my_summary["carbo"] << self.carbo_target * 7 * self.loose_or_gain
+    my_summary["fat"] << self.fat_target * 7 * self.loose_or_gain
+    my_summary["protein"] << self.protein_target * 7 * self.loose_or_gain
 
     return my_summary
+  end
+
+  def loose_or_gain
+    if self.diet_type == "gain weight"
+      1.1
+    elsif self.diet_type == "maintain weight"
+      1.0
+    elsif self.diet_type == "loose weight"
+      0.9
+    else
+      1.0
+    end
   end
 
 
@@ -242,10 +254,10 @@ class User < ActiveRecord::Base
 
     table = TTY::Table.new ["Unit", "Monday","Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday", "Weekly Actual", "Weekly Target", "Performance"],
       [
-        ["Calories", "#{calories_consumed(days[0])[0].round}", "#{calories_consumed(days[1])[0].round}", "#{calories_consumed(days[2])[0].round}", "#{calories_consumed(days[3])[0].round}", "#{calories_consumed(days[4])[0].round}", "#{calories_consumed(days[5])[0].round}", "#{calories_consumed(days[6])[0].round}", "#{calories_consumed_this_week[0].round}", "#{(self.bmr * 7).round}", "#{self.cal_performance}"],
-        ["Carbohydrate", "#{calories_consumed(days[0])[1].round}", "#{calories_consumed(days[1])[1].round}", "#{calories_consumed(days[2])[1].round}", "#{calories_consumed(days[3])[1].round}", "#{calories_consumed(days[4])[1].round}", "#{calories_consumed(days[5])[1].round}", "#{calories_consumed(days[6])[1].round}", "#{calories_consumed_this_week[1].round}", "#{(self.carbo_target * 7).round}", "#{self.carb_performance}"],
-        ["Fat", "#{calories_consumed(days[0])[2].round}", "#{calories_consumed(days[1])[2].round}", "#{calories_consumed(days[2])[2].round}", "#{calories_consumed(days[3])[2].round}", "#{calories_consumed(days[4])[2].round}", "#{calories_consumed(days[5])[2].round}", "#{calories_consumed(days[6])[2].round}", "#{calories_consumed_this_week[2].round}", "#{(self.fat_target * 7).round}", "#{self.fat_performance}"],
-        ["Protein", "#{calories_consumed(days[0])[3].round}", "#{calories_consumed(days[1])[3].round}", "#{calories_consumed(days[2])[3].round}", "#{calories_consumed(days[3])[3].round}", "#{calories_consumed(days[4])[3].round}", "#{calories_consumed(days[5])[3].round}", "#{calories_consumed(days[6])[3].round}", "#{calories_consumed_this_week[3].round}", "#{(self.protein_target * 7).round}", "#{self.protein_performance}"]
+        ["Calories", "#{calories_consumed(days[0])[0].round}", "#{calories_consumed(days[1])[0].round}", "#{calories_consumed(days[2])[0].round}", "#{calories_consumed(days[3])[0].round}", "#{calories_consumed(days[4])[0].round}", "#{calories_consumed(days[5])[0].round}", "#{calories_consumed(days[6])[0].round}", "#{calories_consumed_this_week[0].round}", "#{self.print_nutritional_report["calories"][1].round}", "#{self.cal_performance}"],
+        ["Carbohydrate", "#{calories_consumed(days[0])[1].round}", "#{calories_consumed(days[1])[1].round}", "#{calories_consumed(days[2])[1].round}", "#{calories_consumed(days[3])[1].round}", "#{calories_consumed(days[4])[1].round}", "#{calories_consumed(days[5])[1].round}", "#{calories_consumed(days[6])[1].round}", "#{calories_consumed_this_week[1].round}", "#{self.print_nutritional_report["carbo"][1].round}", "#{self.carb_performance}"],
+        ["Fat", "#{calories_consumed(days[0])[2].round}", "#{calories_consumed(days[1])[2].round}", "#{calories_consumed(days[2])[2].round}", "#{calories_consumed(days[3])[2].round}", "#{calories_consumed(days[4])[2].round}", "#{calories_consumed(days[5])[2].round}", "#{calories_consumed(days[6])[2].round}", "#{calories_consumed_this_week[2].round}", "#{self.print_nutritional_report["fat"][1].round}", "#{self.fat_performance}"],
+        ["Protein", "#{calories_consumed(days[0])[3].round}", "#{calories_consumed(days[1])[3].round}", "#{calories_consumed(days[2])[3].round}", "#{calories_consumed(days[3])[3].round}", "#{calories_consumed(days[4])[3].round}", "#{calories_consumed(days[5])[3].round}", "#{calories_consumed(days[6])[3].round}", "#{calories_consumed_this_week[3].round}", "#{self.print_nutritional_report["protein"][1].round}", "#{self.protein_performance}"]
       ]
     puts table.render(:ascii)
     puts "", "Summary Report"
@@ -376,4 +388,5 @@ class User < ActiveRecord::Base
     def get_weekly_nutritional_target
        calories, carbo, fat, protein = self.bmr * 7, self.carbo_target * 7, self.fat_target * 7, self.protein_target * 7
     end
+
 end
