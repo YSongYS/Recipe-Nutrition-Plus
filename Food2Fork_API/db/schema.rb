@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_01_23_163628) do
+ActiveRecord::Schema.define(version: 2019_01_25_100030) do
 
   create_table "cookings", force: :cascade do |t|
     t.integer "meal_id"
@@ -54,6 +54,10 @@ ActiveRecord::Schema.define(version: 2019_01_23_163628) do
     t.float "carbo_target"
     t.float "protein_target"
     t.float "fat_target"
+    t.string "password"
+    t.string "diet_type"
+    t.string "activity_level"
+    t.string "work_out_intensity"
   end
 
 end

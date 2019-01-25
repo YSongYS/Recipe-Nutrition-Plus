@@ -1,6 +1,8 @@
-# require_relative '../../config/environment'
+require_relative '../../config/environment'
 
 def get_user_crave(day_of_the_week, meal_type)
+  system 'clear'
+  header 
   puts "Happy #{day_of_the_week}! What do you feel like having for #{meal_type}?".green
   user_input = STDIN.gets.chomp
   return user_input

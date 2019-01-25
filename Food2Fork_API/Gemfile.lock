@@ -13,6 +13,7 @@ GEM
       minitest (~> 5.1)
       tzinfo (~> 1.1)
     arel (9.0.0)
+    artii (2.1.2)
     coderay (1.1.2)
     colorize (0.8.1)
     concurrent-ruby (1.1.4)
@@ -65,7 +66,20 @@ GEM
     strings-ansi (0.1.0)
     thread_safe (0.3.6)
     tilt (2.0.9)
+    timers (4.3.0)
+    tty (0.1.0)
     tty-color (0.4.3)
+    tty-cursor (0.6.0)
+    tty-prompt (0.18.1)
+      necromancer (~> 0.4.0)
+      pastel (~> 0.7.0)
+      timers (~> 4.0)
+      tty-cursor (~> 0.6.0)
+      tty-reader (~> 0.5.0)
+    tty-reader (0.5.0)
+      tty-cursor (~> 0.6.0)
+      tty-screen (~> 0.6.4)
+      wisper (~> 2.0.0)
     tty-screen (0.6.5)
     tty-table (0.10.0)
       equatable (~> 0.5.0)
@@ -77,12 +91,14 @@ GEM
       thread_safe (~> 0.1)
     unicode-display_width (1.4.1)
     unicode_utils (1.4.0)
+    wisper (2.0.0)
 
 PLATFORMS
   ruby
 
 DEPENDENCIES
   activerecord
+  artii
   colorize
   database_cleaner
   pry
@@ -91,6 +107,8 @@ DEPENDENCIES
   rspec
   sinatra-activerecord
   sqlite3
+  tty
+  tty-prompt
   tty-table
 
 BUNDLED WITH

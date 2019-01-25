@@ -11,7 +11,10 @@ require 'pry'
 
 require 'csv'
 require 'colorize'
-
+require 'tty'
+require 'artii'
+require 'tty-prompt'
+require 'tty-table'
 
 require_all 'app'
 
@@ -21,4 +24,4 @@ ActiveRecord::Base.establish_connection(
 )
 
 # require 'tty-table'
- # ActiveRecord::Base.logger.level = 1
+ActiveRecord::Base.logger.level = 1
