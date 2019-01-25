@@ -162,7 +162,6 @@ def grocery_list
 end
 
 def new_week
-  User.destroy_all
   Meal.destroy_all
   Cooking.destroy_all
 end
